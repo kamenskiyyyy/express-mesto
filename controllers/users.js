@@ -50,7 +50,12 @@ const updateProfile = (req, res) => {
       }
       return res.status(200).send(data);
     })
-    .catch((err) => res.status(500).send(err));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return res.status(400).send({message: 'Введенные данные некорректны'});
+      }
+      return res.status(500).send(err);
+    });
 };
 
 // Обновить аватар пользователя
@@ -66,7 +71,12 @@ const updateAvatar = (req, res) => {
       }
       return res.status(200).send(data);
     })
-    .catch((err) => res.status(500).send(err));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        return res.status(400).send({message: 'Введенные данные некорректны'});
+      }
+      return res.status(500).send(err);
+    });
 };
 
 module.exports = {
