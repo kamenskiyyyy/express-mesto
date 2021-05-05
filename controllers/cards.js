@@ -1,29 +1,20 @@
 const Card = require('../models/card');
 const ValidationError = require('../errors/ValidationError');
-const ForbiddenError = require('../errors/ForbiddenError');
 const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 // Получить все карточки
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(200)
-      .send(cards))
+    .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
 // Создать карточку
 const createCard = (req, res, next) => {
-  const {
-    name,
-    link,
-  } = req.body;
-  Card.create({
-    name,
-    link,
-    owner: req.user._id,
-  })
-    .then((card) => res.status(200)
-      .send(card))
+  const { name, link } = req.body;
+  Card.create({ name, link, owner: req.user._id })
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       throw new ValidationError('Неверные данные');
     })
@@ -39,6 +30,7 @@ const deleteCard = (req, res, next) => {
       if (card.owner.toString() !== userId) {
         throw new ForbiddenError('Вы не можете удалить чужую карточку');
       }
+
       Card.findByIdAndDelete(req.params.cardId)
         .then((data) => res.status(200).send('Карточка удалена'))
         .catch(next);
