@@ -38,8 +38,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/*', (req, res) => {
-  res.status(404)
-    .send({ message: 'ресурс не найден' });
+  res.status(404).send({ message: 'ресурс не найден' });
 });
 
 app.listen(PORT);

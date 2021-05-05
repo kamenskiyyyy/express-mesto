@@ -36,7 +36,7 @@ const deleteCard = (req, res, next) => {
         .catch(next);
     })
     .catch((err) => {
-      throw new NotFoundError(err.message);
+      throw new ValidationError(err.message);
     })
     .catch(next);
 };
