@@ -18,10 +18,6 @@ const {
 dotenv.config();
 const { PORT = 3000 } = process.env;
 
-const corsOptions = {
-  origin: 'mesto.kamenskiyyyy.nomoredomains.club',
-};
-
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -31,7 +27,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
