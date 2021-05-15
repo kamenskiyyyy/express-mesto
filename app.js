@@ -10,10 +10,16 @@ const {
   login
 } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const NotFoundError = require('./errors/NotFoundError');
+const {
+  validateSignUp,
+  validateSignIn
+} = require('./middlewares/validation');
 const {
   requestLogger,
   errorLogger
 } = require('./middlewares/logger');
+const { errors } = require('celebrate');
 
 dotenv.config();
 const { PORT = 3000 } = process.env;
@@ -40,15 +46,20 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', validateSignIn, login);
+app.post('/signup', validateSignUp, createUser);
 
 app.use(auth);
 
 app.use('/', userRouter);
 app.use('/', cardRouter);
 
+app.get('/*', (req, res) => {
+  throw new NotFoundError('Такой страницы не существует');
+});
+
 app.use(errorLogger);
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const {
@@ -59,11 +70,7 @@ app.use((err, req, res, next) => {
     .send({
       message: statusCode === 500 ? 'Произошла ошибка на сервере' : message,
     });
-});
-
-app.get('/*', (req, res) => {
-  res.status(404)
-    .send({ message: 'ресурс не найден' });
+  next();
 });
 
 app.listen(PORT);
