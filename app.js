@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const {
@@ -9,7 +10,6 @@ const {
   login
 } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const cors = require('cors');
 const {
   requestLogger,
   errorLogger
@@ -33,6 +33,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадет :с');
+  }, 0);
+});
 
 app.post('/signin', login);
 app.post('/signup', createUser);
