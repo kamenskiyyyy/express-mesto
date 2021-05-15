@@ -17,14 +17,14 @@ const auth = (req, res, next) => {
   let payload;
 
   try {
-    // верифицируем токен
+  // верифицируем токен
     payload = jwt.verify(token, `${NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'}`);
   } catch (err) {
     throw new AuthError('Необходима авторизация');
   }
 
-  req.user = payload;
-  next();
+  req.user = payload; // записываем пейлоуд в объект запроса
+  next(); // пропускаем запрос дальше
 };
 
 module.exports = auth;

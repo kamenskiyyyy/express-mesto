@@ -3,25 +3,25 @@ const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
-// Получить все карточки
+//  Получить все карточки
 const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
-// Создать карточку
+//  Создать карточку
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      throw new ValidationError('Неверные данные');
+      throw new ValidationError('Данные неверны');
     })
     .catch(next);
 };
 
-// Удалить карточку
+//  Удалить карточку
 const deleteCard = (req, res, next) => {
   const userId = req.user._id;
   Card.findById(req.params.cardId)
@@ -36,12 +36,11 @@ const deleteCard = (req, res, next) => {
         .catch(next);
     })
     .catch((err) => {
-      throw new ValidationError(err.message);
+      throw new NotFoundError(err.message);
     })
     .catch(next);
 };
 
-// Поставить лайк
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -60,7 +59,6 @@ const likeCard = (req, res, next) => {
     .catch(next);
 };
 
-// Убрать лайк
 const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId,
     { $pull: { likes: req.user._id } },

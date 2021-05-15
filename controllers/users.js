@@ -9,16 +9,12 @@ const DuplicateError = require('../errors/DuplicateError');
 
 dotenv.config();
 
-const {
-  NODE_ENV,
-  JWT_SECRET
-} = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 // Получить всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(200)
-      .send(users))
+    .then((users) => res.status(200).send(users))
     .catch(next);
 };
 
@@ -26,8 +22,7 @@ const getUsers = (req, res, next) => {
 const getMyUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new Error('Нет пользователя с таким id'))
-    .then((user) => res.status(200)
-      .send(user))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new ValidationError('Id неверный');
@@ -41,8 +36,7 @@ const getMyUser = (req, res, next) => {
 const getProfile = (req, res, next) => {
   User.findById(req.params.id)
     .orFail(new Error('Нет пользователя с таким id'))
-    .then((user) => res.status(200)
-      .send(user))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new ValidationError('Id неверный');
@@ -52,14 +46,10 @@ const getProfile = (req, res, next) => {
     .catch(next);
 };
 
-// Создать нового пользователя
+// Создать пользователя
 const createUser = (req, res, next) => {
   const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
+    name, about, avatar, email, password,
   } = req.body;
   if (!email || !password) {
     throw new AuthError('Пароль или почта некорректны');
@@ -67,20 +57,15 @@ const createUser = (req, res, next) => {
   bcrypt.hash(password, 10)
     .then((hash) => {
       User.create({
-        name,
-        about,
-        avatar,
-        email,
-        password: hash,
+        name, about, avatar, email, password: hash,
       })
-        .then((user) => res.status(200)
-          .send({
-            _id: user._id,
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-            email: user.email,
-          }))
+        .then((user) => res.status(200).send({
+          _id: user._id,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        }))
         .catch((err) => {
           if (err.name === 'MongoError' || err.code === 11000) {
             throw new DuplicateError('Пользователь с таким email уже существует');
@@ -94,23 +79,16 @@ const createUser = (req, res, next) => {
 
 // Обновить данные пользователя
 const updateProfile = (req, res, next) => {
-  const {
-    name,
-    about
-  } = req.body;
+  const { name, about } = req.body;
   if (!name || !about) {
     throw new ValidationError('Введенные данные некорректны');
   }
-  User.findByIdAndUpdate(req.user._id, {
-    name,
-    about
-  }, {
+  User.findByIdAndUpdate(req.user._id, { name, about }, {
     new: true, // в then попадет обновленная запись
     runValidators: true, // валидация данных перед изменением
   })
     .orFail(new Error('Нет пользователя с таким Id'))
-    .then((data) => res.status(200)
-      .send(data))
+    .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new ValidationError('Введенные данные некорректны');
@@ -131,8 +109,7 @@ const updateAvatar = (req, res, next) => {
     runValidators: true,
   })
     .orFail(new Error('Нет пользователя с таким id'))
-    .then((data) => res.status(200)
-      .send(data))
+    .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new ValidationError(err.message);
@@ -143,10 +120,7 @@ const updateAvatar = (req, res, next) => {
 };
 
 const login = (req, res, next) => {
-  const {
-    email,
-    password
-  } = req.body;
+  const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, `${NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'}`, { expiresIn: '7d' });
