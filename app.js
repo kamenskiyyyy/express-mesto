@@ -26,9 +26,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 const whitelist = [
-  'http://localhost:3000',
   'https://mesto.kamenskiyyyy.nomoredomains.club/',
   'http://mesto.kamenskiyyyy.nomoredomains.club/',
+  'http://localhost:3000',
 ];
 const corsOptions = {
   origin(origin, callback) {
