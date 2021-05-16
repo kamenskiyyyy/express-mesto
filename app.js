@@ -25,6 +25,11 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 const whitelist = [
   'https://mesto.kamenskiyyyy.nomoredomains.club/',
   'http://mesto.kamenskiyyyy.nomoredomains.club/',
@@ -47,14 +52,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(function(req, res, next) {
-  const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
 
-  if (whitelist.includes(origin)) { // Проверяем, что значение origin есть среди разрешённых доменов
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  next();
-});
 
 app.use(requestLogger);
 
