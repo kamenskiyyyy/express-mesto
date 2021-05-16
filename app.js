@@ -47,6 +47,15 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(function(req, res, next) {
+  const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
+
+  if (whitelist.includes(origin)) { // Проверяем, что значение origin есть среди разрешённых доменов
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  next();
+});
+
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
