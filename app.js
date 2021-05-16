@@ -10,6 +10,7 @@ const { createUser, login } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { validateSignUp, validateSignIn } = require('./middlewares/validation');
 const NotFoundError = require('./errors/NotFoundError');
+const auth = require('./middlewares/auth');
 
 dotenv.config();
 const { PORT = 3000 } = process.env;
@@ -56,10 +57,11 @@ app.get('/crash-test', () => {
 app.post('/signin', validateSignIn, login); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
 app.post('/signup', validateSignUp, createUser);
 
-app.use('/', userRouter);
-app.use('/', cardRouter);
 
-app.use('/*', () => {
+app.use('/', auth, userRouter);
+app.use('/', auth, cardRouter);
+
+app.all('/*', () => {
   throw new NotFoundError('Такой страницы не существует');
 });
 
