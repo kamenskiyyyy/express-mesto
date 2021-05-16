@@ -24,27 +24,26 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-const whitelist = [
-  'http://localhost:3000',
-  'https://mesto.kamenskiyyyy.nomoredomains.club/',
-  'http://mesto.kamenskiyyyy.nomoredomains.club/',
-];
-const corsOptions = {
-  origin(origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
-};
-
-app.use(cors(corsOptions));
+// const whitelist = [
+//   'http://localhost:3000',
+//   'https://mesto.kamenskiyyyy.nomoredomains.club/',
+//   'http://mesto.kamenskiyyyy.nomoredomains.club/',
+// ];
+// const corsOptions = {
+//   origin(origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+// };
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.use(requestLogger);
 
