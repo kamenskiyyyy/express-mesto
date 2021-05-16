@@ -57,14 +57,12 @@ app.get('/crash-test', () => {
 app.post('/signin', validateSignIn, login); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
 app.post('/signup', validateSignUp, createUser);
 
-app.use(auth);
-
-app.use('/', userRouter);
-app.use('/', cardRouter);
-
 app.use('/*', () => {
   throw new NotFoundError('Такой страницы не существует');
 });
+
+app.use('/', auth, userRouter);
+app.use('/', auth, cardRouter);
 
 app.use(errorLogger);
 app.use(errors()); // обработчик ошибок celebrate
