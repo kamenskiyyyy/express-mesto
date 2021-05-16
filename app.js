@@ -25,8 +25,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 const whitelist = [
   'http://localhost:3000',
-  'https://mesto.kamenskiyyyy.nomoredomains.club/sign-up',
-  'http://mesto.kamenskiyyyy.nomoredomains.club/sign-up',
+  'https://mesto.kamenskiyyyy.nomoredomains.club/',
+  'http://mesto.kamenskiyyyy.nomoredomains.club/',
 ];
 const corsOptions = {
   origin(origin, callback) {
@@ -55,7 +55,6 @@ app.get('/crash-test', () => {
 
 app.post('/signin', validateSignIn, login); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
 app.post('/signup', validateSignUp, createUser);
-
 
 app.use('/', userRouter);
 app.use('/', cardRouter);
