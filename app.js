@@ -16,6 +16,7 @@ dotenv.config();
 const { PORT = 3000 } = process.env;
 
 const app = express();
+app.disable('x-powered-by');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -57,9 +58,10 @@ app.get('/crash-test', () => {
 app.post('/signin', validateSignIn, login); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
 app.post('/signup', validateSignUp, createUser);
 
+app.use(auth);
 
-app.use('/', auth, userRouter);
-app.use('/', auth, cardRouter);
+app.use('/', userRouter);
+app.use('/', cardRouter);
 
 app.all('/*', () => {
   throw new NotFoundError('Такой страницы не существует');
