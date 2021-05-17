@@ -6,10 +6,10 @@ const {
 
 const { validateId, validateUserInfo, validateUserAvatar } = require('../middlewares/validation');
 
-router.get('/users', getUsers);
-router.get('/users/me', getMyUser);
-router.get('/users/:id', validateId, getProfile); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
-router.patch('/users/me', validateUserInfo, updateProfile);
-router.patch('/users/me/avatar', validateUserAvatar, updateAvatar);
+router.get('/', getUsers);
+router.get('/me', getMyUser);
+router.get('/:id', validateId, getProfile); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
+router.patch('/me', validateUserInfo, updateProfile);
+router.patch('/me/avatar', validateUserAvatar, updateAvatar);
 
 module.exports = router;

@@ -44,11 +44,10 @@ app.get('/crash-test', () => {
 app.post('/signin', validateSignIn, login); // вторым аргументом передаем middleware для валидации приходящих данных до обращения к бд
 app.post('/signup', validateSignUp, createUser);
 
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 
-app.use('/', auth, userRouter);
-app.use('/', auth, cardRouter);
-
-app.all('/*', () => {
+app.all('*', () => {
   throw new NotFoundError('Такой страницы не существует');
 });
 
