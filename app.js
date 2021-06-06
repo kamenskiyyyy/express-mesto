@@ -13,7 +13,7 @@ const NotFoundError = require('./errors/NotFoundError');
 const auth = require('./middlewares/auth');
 
 dotenv.config();
-const { PORT = 3000 } = process.env;
+const { PORT = 3010 } = process.env;
 
 const app = express();
 app.disable('x-powered-by');
